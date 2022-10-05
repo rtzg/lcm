@@ -16,12 +16,14 @@ body.onmousedown = () => {
         lcm.src = './d1c7e543-f09f-47c7-97d6-f4f157a13d4c.png';
     }
 }
+
+rickroll = [68,668,1668,6668,66669,6666669,666666669]
 body.onmouseup = () => {
     if (!rickrolling) {
         lcm.src = './d1c7e543-f09f-47c7-97d6-f4f157a13d3c.png';
         clicks++;
         nums.innerText = (clicks);
-        if (clicks % 100 == 68) {
+        if (rickroll.includes(clicks)) {
             clicker.style.display = 'none';
             rickdiv.style.display = 'flex';
             nums.innerText = ("Rickrolled");
