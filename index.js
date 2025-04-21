@@ -1,43 +1,58 @@
-const x = document.getElementById("x");
-const body = document.getElementById('clicker');
-const lcm = document.getElementById('lcm');
-const nums = document.getElementById('n');
-var clicks = localStorage.getItem('LcmClicks');
-const clicker = document.getElementById('clicker');
-const rick = document.getElementById('rickRollV');
-const rickdiv = document.getElementById('rickRoll');
-const html = document.getElementsByTagName('html')[0];
-var rickrolling = false;
-clicks = clicks == undefined ? 0 : clicks;
-nums.innerText = (clicks);
-body.onmousedown = () => {
-    if (!rickrolling) {
-        localStorage.setItem('LcmClicks', clicks);
-        lcm.src = './d1c7e543-f09f-47c7-97d6-f4f157a13d4c.png';
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const clicker = document.getElementById("clicker");
+    const counter = document.getElementById("n");
+    const sounds = ["assets/pop1.ogg", "assets/pop2.ogg", "assets/pop3.ogg", "assets/pop4.ogg"];
 
-rickroll = [68,668,1668,6668,66669,6666669,666666669]
-body.onmouseup = () => {
-    if (!rickrolling) {
-        lcm.src = './d1c7e543-f09f-47c7-97d6-f4f157a13d3c.png';
-        clicks++;
-        nums.innerText = (clicks);
-        if (rickroll.includes(clicks)) {
-            clicker.style.display = 'none';
-            rickdiv.style.display = 'flex';
-            nums.innerText = ("Rickrolled");
-            rickrolling = true;
-            rick.play();
-        }
-    }
+    let count = 0;
+    let isTouch = false; // Detect touch devices
+
+    counter.textContent = count;
+
+    // Get min value of width and height of viewport for scaling
+    const minSize = Math.min(window.innerWidth, window.innerHeight) * 0.8; // 80% of the viewport size
+    clicker.style.width = `${minSize}px`;
+    clicker.style.height = `${minSize}px`;
+    clicker.style.backgroundImage = 'url("assets/normal.webp")';
+    clicker.style.backgroundSize = "cover";
+    clicker.style.cursor = "pointer";
+
+    const popEffect = (event) => {
+        // Prevent double activation on touch screens
+        if (event.type === "touchstart") isTouch = true;
+        if (event.type === "mousedown" && isTouch) return;
+
+        count++;
+        counter.textContent = count;
+
+        // Play a random pop sound
+        const audio = new Audio(sounds[Math.floor(Math.random() * sounds.length)]);
+        audio.play();
+
+        // Change image to opened & add animation
+        clicker.style.backgroundImage = 'url("assets/opened.webp")';
+    };
+
+    const revertEffect = () => {
+        clicker.style.backgroundImage = 'url("assets/normal.webp")';
+    };
+
+    // Detect touch/mouse interactions
+    clicker.addEventListener("touchstart", popEffect);
+    clicker.addEventListener("touchend", revertEffect);
+    clicker.addEventListener("mousedown", popEffect);
+    clicker.addEventListener("mouseup", revertEffect);
+});
+
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
+document.addEventListener('doubleclick', function (e) {
+    e.preventDefault();
+});
+var allElements = document.getElementsByTagName('*');
+for (let i = 0; i < allElements.length; i++) {
+    allElements[i].addEventListener('click', function (e) {
+        if (e.target.tagName == 'INPUT' || e.target.tagName == 'A') return;
+        e.preventDefault();
+    });
 }
-html.onkeydown = body.ontouchstart = body.onmousedown;
-html.onkeyup = body.ontouchend = body.onmouseup;
-var closeX = () => {
-    rickdiv.style.display = 'none';
-    clicker.style.display = 'flex';
-    rick.pause();
-    rickrolling = false;
-}
-document.getElementById('x').onclick = closeX;
